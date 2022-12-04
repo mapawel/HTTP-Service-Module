@@ -1,3 +1,4 @@
+import path from 'path';
 import axios, {
   AxiosError,
   AxiosInstance,
@@ -31,7 +32,9 @@ export class HttpService implements IhttpService {
     config?: AxiosRequestConfig
   ): Promise<AxiosResponse> {
     try {
-      validateHttpMethodParam(url);
+      validateHttpMethodParam(
+        path.join(HttpService.getAxiosDefaults().baseURL || '', url)
+      );
       return await HttpService.axios({
         url,
         method: 'GET',
@@ -46,7 +49,10 @@ export class HttpService implements IhttpService {
   }
 
   public async post(url: string, data: DataType, config?: AxiosRequestConfig) {
-    validateHttpMethodParam(url);
+    validateHttpMethodParam(
+      path.join(HttpService.getAxiosDefaults().baseURL || '', url)
+    );
+
     try {
       return await HttpService.axios({
         url,
@@ -65,7 +71,10 @@ export class HttpService implements IhttpService {
   // Error handling --> https://bobbyhadz.com/blog/typescript-property-status-does-not-exist-on-type-error
 
   public async delete(url: string, config?: AxiosRequestConfig) {
-    validateHttpMethodParam(url);
+    validateHttpMethodParam(
+      path.join(HttpService.getAxiosDefaults().baseURL || '', url)
+    );
+
     try {
       return await HttpService.axios({
         url,
