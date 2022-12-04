@@ -1,10 +1,16 @@
-import { assert } from 'chai';
+import chai, { assert, expect } from 'chai';
+import chaiAsPromised from 'chai-as-promised';
 import nock from 'nock';
 import { HttpService } from '../HttpService';
+
+chai.use(chaiAsPromised);
 
 describe('Http Service:', () => {
   //arrange
   const nockServerWhBasePath = nock('http://basepath.com');
+  nockServerWhBasePath.get('/testroute').reply(200, {
+    bodyKey: 'exampleDataInBody',
+  });
   nockServerWhBasePath.get('/testroute').reply(200, {
     bodyKey: 'exampleDataInBody',
   });
@@ -31,61 +37,64 @@ describe('Http Service:', () => {
       assert.equal(res.status, 200);
       assert.deepEqual(res.data, { bodyKey: 'exampleDataInBody' });
     });
+
     it('should return Http Service Error', async () => {
       //Act+Assert
-      assert.throws(() => {})
-    });
-  });
-
-  context('POST method:', () => {
-    it('should response with status 201', async () => {
-      //Act
-      const res = await myHttpService.post(
-        '/testroute',
-        { q: 'data' },
-        {
-          headers: { 'example-methodCall-header': 'example-value2' },
-        }
+      await expect(myHttpService.get('/testroute', {baseURL: 'wrongURL',})).to.be.rejectedWith(
+        `Invalid URL`
       );
-      //Assert
-      assert.equal(res.status, 201);
-    });
-    it('should return Http Service Error', async () => {
-      //Act
-      try {
-        const res = await myHttpService.post('', {});
-        //Assert
-        assert.equal(res.status, 200);
-        assert.deepEqual(res.data, { bodyKey: 'exampleDataInBody' });
-      } catch (err: unknown) {
-        if (err instanceof Error) {
-          return assert.equal('Provide the method with an URL...', err.message);
-        }
-      }
     });
   });
 
-  context('DELETE method:', () => {
-    it('should response with status 202', async () => {
-      //Act
-      const res = await myHttpService.delete('/testroute', {
-        headers: { 'example-methodCall-header': 'example-value2' },
-      });
-      //Assert
-      assert.equal(res.status, 202);
-    });
-    it('should return Http Service Error', async () => {
-      //Act
-      try {
-        const res = await myHttpService.delete('');
-        //Assert
-        assert.equal(res.status, 200);
-        assert.deepEqual(res.data, { bodyKey: 'exampleDataInBody' });
-      } catch (err: unknown) {
-        if (err instanceof Error) {
-          return assert.equal('Provide the method with an URL...', err.message);
-        }
-      }
-    });
-  });
+  // context('POST method:', () => {
+  //   it('should response with status 201', async () => {
+  //     //Act
+  //     const res = await myHttpService.post(
+  //       '/testroute',
+  //       { q: 'data' },
+  //       {
+  //         headers: { 'example-methodCall-header': 'example-value2' },
+  //       }
+  //     );
+  //     //Assert
+  //     assert.equal(res.status, 201);
+  //   });
+  //   it('should return Http Service Error', async () => {
+  //     //Act
+  //     try {
+  //       const res = await myHttpService.post('', {});
+  //       //Assert
+  //       assert.equal(res.status, 200);
+  //       assert.deepEqual(res.data, { bodyKey: 'exampleDataInBody' });
+  //     } catch (err: unknown) {
+  //       if (err instanceof Error) {
+  //         return assert.equal('Provide the method with an URL...', err.message);
+  //       }
+  //     }
+  //   });
+  // });
+
+  // context('DELETE method:', () => {
+  //   it('should response with status 202', async () => {
+  //     //Act
+  //     const res = await myHttpService.delete('/testroute', {
+  //       headers: { 'example-methodCall-header': 'example-value2' },
+  //     });
+  //     //Assert
+  //     assert.equal(res.status, 202);
+  //   });
+  //   it('should return Http Service Error', async () => {
+  //     //Act
+  //     try {
+  //       const res = await myHttpService.delete('');
+  //       //Assert
+  //       assert.equal(res.status, 200);
+  //       assert.deepEqual(res.data, { bodyKey: 'exampleDataInBody' });
+  //     } catch (err: unknown) {
+  //       if (err instanceof Error) {
+  //         return assert.equal('Provide the method with an URL...', err.message);
+  //       }
+  //     }
+  //   });
+  // });
 });

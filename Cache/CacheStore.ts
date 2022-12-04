@@ -18,12 +18,14 @@ export class CacheStore {
     CacheStore.cacheData.set(key, value);
     return true
   }
-
+  
   getCachedData(key: string): AxiosResponse | false {
+    validateCacheInput(key);
     return CacheStore.cacheData.get(key) || false;
   }
-
+  
   removeCachedData(key: string): boolean {
+    validateCacheInput(key);
     return CacheStore.cacheData.delete(key);
   }
 }

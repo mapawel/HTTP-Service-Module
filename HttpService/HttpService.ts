@@ -1,10 +1,5 @@
 import path from 'path';
-import axios, {
-  AxiosError,
-  AxiosInstance,
-  AxiosRequestConfig,
-  AxiosResponse,
-} from 'axios';
+import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { IhttpService } from './httpServiceInterface';
 import type { DataType } from './requestBodyDataType';
 import { HttpServiceError } from './HttpServiceError.js';
@@ -32,11 +27,12 @@ export class HttpService implements IhttpService {
     config?: AxiosRequestConfig
   ): Promise<AxiosResponse> {
     try {
+      const urlT = url.trim();
       validateHttpMethodParam(
-        path.join(HttpService.getAxiosDefaults().baseURL || '', url)
+        path.join(HttpService.getAxiosDefaults().baseURL || '', urlT)
       );
       return await HttpService.axios({
-        url,
+        url: urlT,
         method: 'GET',
         ...config,
       });
@@ -49,13 +45,13 @@ export class HttpService implements IhttpService {
   }
 
   public async post(url: string, data: DataType, config?: AxiosRequestConfig) {
-    validateHttpMethodParam(
-      path.join(HttpService.getAxiosDefaults().baseURL || '', url)
-    );
-
     try {
+      const urlT = url.trim();
+      validateHttpMethodParam(
+        path.join(HttpService.getAxiosDefaults().baseURL || '', urlT)
+      );
       return await HttpService.axios({
-        url,
+        url: urlT,
         method: 'POST',
         data,
         ...config,
@@ -71,13 +67,15 @@ export class HttpService implements IhttpService {
   // Error handling --> https://bobbyhadz.com/blog/typescript-property-status-does-not-exist-on-type-error
 
   public async delete(url: string, config?: AxiosRequestConfig) {
-    validateHttpMethodParam(
-      path.join(HttpService.getAxiosDefaults().baseURL || '', url)
-    );
-
     try {
+      const urlT = url.trim();
+
+      validateHttpMethodParam(
+        path.join(HttpService.getAxiosDefaults().baseURL || '', urlT)
+      );
+
       return await HttpService.axios({
-        url,
+        url: urlT,
         method: 'DELETE',
         ...config,
       });

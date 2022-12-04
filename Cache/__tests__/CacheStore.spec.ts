@@ -39,20 +39,32 @@ describe('CacheStore:', () => {
     });
   });
 
-  it('should return validator error while passing empty path as a key', () => {
+  it('should remove key-value pair from Cache Store with use of removeCachedData()', () => {
+    // Act
+    const operationResponse = cacheStore.removeCachedData('https://test.pl/a');
+    //assert
+    const cacheResponse = cacheStore.getCachedData('https://test.pl/a');
+    assert.equal(operationResponse, true);
+    assert.equal(cacheResponse, false);
+  });
+
+  it('should throw error passed not url to getCachedData mathod', () => {
+    // Act+assert
+
+    assert.throws(() => cacheStore.getCachedData(''), 'Invalid URL');
+  });
+
+  it('should throw error passed not url as a key to addToCache method', () => {
     // Act+assert
 
     assert.throws(
       () => cacheStore.addToCache('', {} as AxiosResponse),
-      'Empty string as a key for cache not accepted.'
+      'Invalid URL'
     );
   });
 
-  it('should remove key-value pair from Cache Store with use of removeCachedData()', () => {
-    // Act
-    cacheStore.removeCachedData('https://test.pl/a');
-    //assert
-    const cacheResponse = cacheStore.getCachedData('https://test.pl/a');
-    assert.equal(cacheResponse, undefined);
+  it('should throw error from removeCachedData() when not url passed', () => {
+    // Act+assert
+    assert.throws(() => cacheStore.removeCachedData(''), 'Invalid URL');
   });
 });
