@@ -15,6 +15,7 @@ describe('Http Service:', () => {
     bodyKey: 'exampleDataInBody',
   });
   nockServerWhBasePath.post('/testroute').reply(201);
+  nockServerWhBasePath.post('/testroute').reply(201);
   nockServerWhBasePath.delete('/testroute').reply(202);
 
   const myHttpService = HttpService.getInstance({
@@ -40,61 +41,48 @@ describe('Http Service:', () => {
 
     it('should return Http Service Error', async () => {
       //Act+Assert
-      await expect(myHttpService.get('/testroute', {baseURL: 'wrongURL',})).to.be.rejectedWith(
-        `Invalid URL`
-      );
+      await expect(
+        myHttpService.get('/testroute', { baseURL: 'wrongURL' })
+      ).to.be.rejectedWith(`Invalid URL`);
     });
   });
 
-  // context('POST method:', () => {
-  //   it('should response with status 201', async () => {
-  //     //Act
-  //     const res = await myHttpService.post(
-  //       '/testroute',
-  //       { q: 'data' },
-  //       {
-  //         headers: { 'example-methodCall-header': 'example-value2' },
-  //       }
-  //     );
-  //     //Assert
-  //     assert.equal(res.status, 201);
-  //   });
-  //   it('should return Http Service Error', async () => {
-  //     //Act
-  //     try {
-  //       const res = await myHttpService.post('', {});
-  //       //Assert
-  //       assert.equal(res.status, 200);
-  //       assert.deepEqual(res.data, { bodyKey: 'exampleDataInBody' });
-  //     } catch (err: unknown) {
-  //       if (err instanceof Error) {
-  //         return assert.equal('Provide the method with an URL...', err.message);
-  //       }
-  //     }
-  //   });
-  // });
+  context('POST method:', () => {
+    it('should response with status 201', async () => {
+      //Act
+      const res = await myHttpService.post(
+        '/testroute',
+        { q: 'data' },
+        {
+          headers: { 'example-methodCall-header': 'example-value2' },
+        }
+      );
+      //Assert
+      assert.equal(res.status, 201);
+    });
 
-  // context('DELETE method:', () => {
-  //   it('should response with status 202', async () => {
-  //     //Act
-  //     const res = await myHttpService.delete('/testroute', {
-  //       headers: { 'example-methodCall-header': 'example-value2' },
-  //     });
-  //     //Assert
-  //     assert.equal(res.status, 202);
-  //   });
-  //   it('should return Http Service Error', async () => {
-  //     //Act
-  //     try {
-  //       const res = await myHttpService.delete('');
-  //       //Assert
-  //       assert.equal(res.status, 200);
-  //       assert.deepEqual(res.data, { bodyKey: 'exampleDataInBody' });
-  //     } catch (err: unknown) {
-  //       if (err instanceof Error) {
-  //         return assert.equal('Provide the method with an URL...', err.message);
-  //       }
-  //     }
-  //   });
-  // });
+    it('should return Http Service Error', async () => {
+      //Act+assert
+      await expect(
+        myHttpService.post('/testroute', {}, { baseURL: 'wrongURL' })
+      ).to.be.rejectedWith(`Invalid URL`);
+    });
+  });
+
+  context('DELETE method:', () => {
+    it('should response with status 202', async () => {
+      //Act
+      const res = await myHttpService.delete('/testroute', {
+        headers: { 'example-methodCall-header': 'example-value2' },
+      });
+      //Assert
+      assert.equal(res.status, 202);
+    });
+    it('should return Http Service Error', async () => {
+      //Act+assert
+      await expect(
+        myHttpService.delete('/testroute', { baseURL: 'wrongURL' })
+      ).to.be.rejectedWith(`Invalid URL`);
+    });
+  });
 });
