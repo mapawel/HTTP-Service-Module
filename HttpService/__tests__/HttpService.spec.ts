@@ -1,3 +1,4 @@
+import { AxiosResponse } from 'axios';
 import chai, { assert, expect } from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import nock from 'nock';
@@ -7,18 +8,14 @@ chai.use(chaiAsPromised);
 
 describe('Http Service:', () => {
   //arrange
-  const nockServerWhBasePath = nock('http://basepath.com');
-  nockServerWhBasePath.get('/testroute').reply(200, {
+  const nockServerWhBasePath: nock.Scope = nock('http://basepath.com');
+  nockServerWhBasePath.get('/testroute').times(2).reply(200, {
     bodyKey: 'exampleDataInBody',
   });
-  nockServerWhBasePath.get('/testroute').reply(200, {
-    bodyKey: 'exampleDataInBody',
-  });
-  nockServerWhBasePath.post('/testroute').reply(201);
-  nockServerWhBasePath.post('/testroute').reply(201);
+  nockServerWhBasePath.post('/testroute').times(2).reply(201);
   nockServerWhBasePath.delete('/testroute').reply(202);
 
-  const myHttpService = HttpService.getInstance({
+  const myHttpService: HttpService = HttpService.getInstance({
     baseURL: 'http://basepath.com',
     headers: {
       'Content-Type': 'application/json',
@@ -30,7 +27,7 @@ describe('Http Service:', () => {
   context('GET method:', () => {
     it('should response with status 200 and data', async () => {
       //Act
-      const res = await myHttpService.get('/testroute', {
+      const res: AxiosResponse = await myHttpService.get('/testroute', {
         headers: { 'example-methodCall-header': 'example-value2' },
       });
 
@@ -50,7 +47,7 @@ describe('Http Service:', () => {
   context('POST method:', () => {
     it('should response with status 201', async () => {
       //Act
-      const res = await myHttpService.post(
+      const res: AxiosResponse = await myHttpService.post(
         '/testroute',
         { q: 'data' },
         {
@@ -72,7 +69,7 @@ describe('Http Service:', () => {
   context('DELETE method:', () => {
     it('should response with status 202', async () => {
       //Act
-      const res = await myHttpService.delete('/testroute', {
+      const res: AxiosResponse = await myHttpService.delete('/testroute', {
         headers: { 'example-methodCall-header': 'example-value2' },
       });
       //Assert

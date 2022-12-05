@@ -1,13 +1,14 @@
 import { AxiosResponse } from 'axios';
 import { assert } from 'chai';
 import { CacheStore } from '../CacheStore';
+import { MockItem } from './MockItemType';
 
 describe('CacheStore:', () => {
   //Arrange
   let getOperationResponses: boolean[];
   let deleteOperationResponse: boolean;
-  const cacheStore = CacheStore.getInstance();
-  const mockUrlAndResponsePairs = [
+  const cacheStore: CacheStore = CacheStore.getInstance();
+  const mockUrlAndResponsePairs: MockItem[] = [
     {
       requestFullUrl: 'https://test.pl/a',
       response: {
@@ -28,11 +29,11 @@ describe('CacheStore:', () => {
 
   it('should add HTTP response to Cache Store with use of addToCache() and should be able to return cache data using getCachedData()', () => {
     // Act
-    getOperationResponses = mockUrlAndResponsePairs.map((mock) =>
+    getOperationResponses = mockUrlAndResponsePairs.map((mock: MockItem) =>
       cacheStore.addToCache(mock.requestFullUrl, mock.response as AxiosResponse)
     );
-    mockUrlAndResponsePairs.forEach((mock, i) => {
-      const cachedResponse = cacheStore.getCachedData(mock.requestFullUrl);
+    mockUrlAndResponsePairs.forEach((mock: MockItem, i: number) => {
+      const cachedResponse: false | AxiosResponse = cacheStore.getCachedData(mock.requestFullUrl);
       // Assert
       assert.deepEqual(
         cachedResponse,
@@ -70,7 +71,7 @@ describe('CacheStore:', () => {
       mockUrlAndResponsePairs[0].requestFullUrl
     );
     //assert
-    const cacheResponse = cacheStore.getCachedData(
+    const cacheResponse: false | AxiosResponse = cacheStore.getCachedData(
       mockUrlAndResponsePairs[0].requestFullUrl
     );
     assert.equal(deleteOperationResponse, true);
