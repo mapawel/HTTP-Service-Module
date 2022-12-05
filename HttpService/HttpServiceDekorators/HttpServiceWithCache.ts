@@ -6,25 +6,27 @@ import { HttpService } from '../HttpService.js';
 import { validateHttpMethodParam } from '../validators/validateHttpMethodParam.js';
 
 export class HttpServiceWithCache extends HttpServiceDecorator {
+  private makeFullURL(urlT: string, config?: AxiosRequestConfig) {
+    return path.join(
+      (config?.baseURL
+        ? config.baseURL
+        : HttpService.getAxiosDefaults().baseURL) || '',
+      urlT
+    );
+  }
+
   public async get(
     url: string,
     config?: AxiosRequestConfig
   ): Promise<AxiosResponse> {
-    const urlT = url.trim()
-    validateHttpMethodParam(
-      path.join(HttpService.getAxiosDefaults().baseURL || '', urlT)
-    );
+    const urlT = url.trim();
+    validateHttpMethodParam(this.makeFullURL(urlT, config));
     const cacheStore = CacheStore.getInstance();
-    const foundCache = cacheStore.getCachedData(
-      path.join(HttpService.getAxiosDefaults().baseURL || '', urlT)
-    );
+    const foundCache = cacheStore.getCachedData(this.makeFullURL(urlT, config));
     if (foundCache) return Promise.resolve(foundCache);
 
     const freshResponce = await super.get(urlT, config);
-    cacheStore.addToCache(
-      path.join(HttpService.getAxiosDefaults().baseURL || '', urlT),
-      freshResponce
-    );
+    cacheStore.addToCache(this.makeFullURL(urlT, config), freshResponce);
     return freshResponce;
   }
 }
