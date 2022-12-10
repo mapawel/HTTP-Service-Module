@@ -25,7 +25,7 @@ export class HttpService implements IhttpService {
   public async get(
     url: string,
     config?: AxiosRequestConfig
-  ): Promise<AxiosResponse> {
+  ): Promise<AxiosResponse | undefined> {
     try {
       const urlT = url.trim();
       validateHttpMethodParam(
@@ -36,15 +36,18 @@ export class HttpService implements IhttpService {
         method: 'GET',
         ...config,
       });
-    } catch (err: unknown) {
+    } catch (err) {
       if (err instanceof Error) {
         throw new HttpServiceError(err?.message, 500);
       }
-      throw new Error('Unexpected HTTP Service Error!');
     }
   }
 
-  public async post(url: string, data: DataType, config?: AxiosRequestConfig) {
+  public async post(
+    url: string,
+    data: DataType,
+    config?: AxiosRequestConfig
+  ): Promise<AxiosResponse | undefined> {
     try {
       const urlT = url.trim();
       validateHttpMethodParam(
@@ -56,17 +59,19 @@ export class HttpService implements IhttpService {
         data,
         ...config,
       });
-    } catch (err: unknown) {
+    } catch (err) {
       if (err instanceof Error) {
         throw new HttpServiceError(err?.message, 500);
       }
-      throw new Error('Unexpected HTTP Service Error!');
     }
   }
 
   // Error handling --> https://bobbyhadz.com/blog/typescript-property-status-does-not-exist-on-type-error
 
-  public async delete(url: string, config?: AxiosRequestConfig) {
+  public async delete(
+    url: string,
+    config?: AxiosRequestConfig
+  ): Promise<AxiosResponse | undefined> {
     try {
       const urlT = url.trim();
 
@@ -79,11 +84,10 @@ export class HttpService implements IhttpService {
         method: 'DELETE',
         ...config,
       });
-    } catch (err: unknown) {
+    } catch (err) {
       if (err instanceof Error) {
         throw new HttpServiceError(err?.message, 500);
       }
-      throw new Error('Unexpected HTTP Service Error!');
     }
   }
 }

@@ -4,6 +4,7 @@ import { HttpServiceDecorator } from './HttpServiceDecorator.js';
 import { CacheStore } from '../../Cache/CacheStore.js';
 import { HttpService } from '../HttpService.js';
 import { validateHttpMethodParam } from '../validators/validateHttpMethodParam.js';
+import { CacheServiceError } from '../../Cache/CacheServiceError.js';
 
 export class HttpServiceWithCache extends HttpServiceDecorator {
   private makeFullURL(urlT: string, config?: AxiosRequestConfig) {
@@ -25,8 +26,17 @@ export class HttpServiceWithCache extends HttpServiceDecorator {
     const foundCache = cacheStore.getCachedData(this.makeFullURL(urlT, config));
     if (foundCache) return Promise.resolve(foundCache);
 
-    const freshResponce = await super.get(urlT, config);
-    cacheStore.addToCache(this.makeFullURL(urlT, config), freshResponce);
-    return freshResponce;
+    const freshResponce: AxiosResponse | undefined = await super.get(
+      urlT,
+      config
+    );
+    if (freshResponce) {
+      cacheStore.addToCache(this.makeFullURL(urlT, config), freshResponce);
+      return freshResponce;
+    }
+    throw new CacheServiceError(
+      'Cannot obtain a fresh response for cache from http module',
+      500
+    );
   }
 }

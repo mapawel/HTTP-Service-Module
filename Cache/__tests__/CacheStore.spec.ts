@@ -5,7 +5,7 @@ import { MockItem } from './MockItemType';
 
 describe('CacheStore:', () => {
   //Arrange
-  let getOperationResponses: boolean[];
+  const getOperationResponses: boolean[] = [];
   let deleteOperationResponse: boolean;
   const cacheStore: CacheStore = CacheStore.getInstance();
   const mockUrlAndResponsePairs: MockItem[] = [
@@ -29,11 +29,18 @@ describe('CacheStore:', () => {
 
   it('should add HTTP response to Cache Store with use of addToCache() and should be able to return cache data using getCachedData()', () => {
     // Act
-    getOperationResponses = mockUrlAndResponsePairs.map((mock: MockItem) =>
-      cacheStore.addToCache(mock.requestFullUrl, mock.response as AxiosResponse)
+    mockUrlAndResponsePairs.forEach((mock: MockItem) =>
+      getOperationResponses.push(
+        cacheStore.addToCache(
+          mock.requestFullUrl,
+          mock.response as AxiosResponse
+        )
+      )
     );
     mockUrlAndResponsePairs.forEach((mock: MockItem, i: number) => {
-      const cachedResponse: false | AxiosResponse = cacheStore.getCachedData(mock.requestFullUrl);
+      const cachedResponse: false | AxiosResponse = cacheStore.getCachedData(
+        mock.requestFullUrl
+      );
       // Assert
       assert.deepEqual(
         cachedResponse,

@@ -37,12 +37,12 @@ if (process.env.EXAMPLE_BASEURL1) {
         { q: 'data', w: false },
         { headers: { 'example-methodCall-header': 'example-value2' } }
       );
-      console.log('response4 ----> ', response4.status);
+      console.log('response4 ----> ', response4?.status);
 
       const response5 = await myDecoratedHttpService.delete('/testroute', {
         headers: { 'example-methodCall-header': 'example-value2' },
       });
-      console.log('response5 ----> ', response5.status);
+      console.log('response5 ----> ', response5?.status);
     } catch (err: unknown) {
       if (err instanceof Error)
         throw new Error(
