@@ -10,20 +10,20 @@ export class HttpServiceDecorator implements IhttpService {
     this.component = component;
   }
 
-  public get(url: string, config?: AxiosRequestConfig): Promise<AxiosResponse | undefined> {
+  public get(url: string, config?: AxiosRequestConfig): Promise<AxiosResponse> {
     return this.component.get(url, config);
   }
   public post(
     url: string,
     data: DataType,
     config?: AxiosRequestConfig
-  ): Promise<AxiosResponse | undefined> {
+  ): Promise<AxiosResponse> {
     return this.component.post(url, data, config);
   }
   public delete(
     url: string,
     config?: AxiosRequestConfig
-  ): Promise<AxiosResponse | undefined> {
+  ): Promise<AxiosResponse> {
     return this.component.delete(url, config);
   }
 }

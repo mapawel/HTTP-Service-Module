@@ -7,5 +7,6 @@ export const validateCacheInput = (key: string): void => {
     if (err instanceof Error) {
       throw new CacheServiceError(err?.message, 500);
     }
+    throw new CacheServiceError('Unexpected cache error', 500);
   }
 };

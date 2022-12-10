@@ -27,7 +27,7 @@ describe('Http Service:', () => {
   context('GET method:', () => {
     it('should response with status 200 and data', async () => {
       //Act
-      const res: AxiosResponse | undefined = await myHttpService.get(
+      const res: AxiosResponse = await myHttpService.get(
         '/testroute',
         {
           headers: { 'example-methodCall-header': 'example-value2' },
@@ -35,8 +35,8 @@ describe('Http Service:', () => {
       );
 
       //Assert
-      assert.equal(res?.status, 200);
-      assert.deepEqual(res?.data, { bodyKey: 'exampleDataInBody' });
+      assert.equal(res.status, 200);
+      assert.deepEqual(res.data, { bodyKey: 'exampleDataInBody' });
     });
 
     it('should return Http Service Error', async () => {
@@ -50,7 +50,7 @@ describe('Http Service:', () => {
   context('POST method:', () => {
     it('should response with status 201', async () => {
       //Act
-      const res: AxiosResponse | undefined = await myHttpService.post(
+      const res: AxiosResponse = await myHttpService.post(
         '/testroute',
         { q: 'data' },
         {
@@ -58,7 +58,7 @@ describe('Http Service:', () => {
         }
       );
       //Assert
-      assert.equal(res?.status, 201);
+      assert.equal(res.status, 201);
     });
 
     it('should return Http Service Error', async () => {
@@ -72,14 +72,14 @@ describe('Http Service:', () => {
   context('DELETE method:', () => {
     it('should response with status 202', async () => {
       //Act
-      const res: AxiosResponse | undefined = await myHttpService.delete(
+      const res: AxiosResponse = await myHttpService.delete(
         '/testroute',
         {
           headers: { 'example-methodCall-header': 'example-value2' },
         }
       );
       //Assert
-      assert.equal(res?.status, 202);
+      assert.equal(res.status, 202);
     });
     it('should return Http Service Error', async () => {
       //Act+assert

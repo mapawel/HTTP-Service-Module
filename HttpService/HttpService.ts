@@ -25,7 +25,7 @@ export class HttpService implements IhttpService {
   public async get(
     url: string,
     config?: AxiosRequestConfig
-  ): Promise<AxiosResponse | undefined> {
+  ): Promise<AxiosResponse> {
     try {
       const urlT = url.trim();
       validateHttpMethodParam(
@@ -40,6 +40,7 @@ export class HttpService implements IhttpService {
       if (err instanceof Error) {
         throw new HttpServiceError(err?.message, 500);
       }
+      throw new HttpServiceError('Unexpected Http dervice error', 500);
     }
   }
 
@@ -47,7 +48,7 @@ export class HttpService implements IhttpService {
     url: string,
     data: DataType,
     config?: AxiosRequestConfig
-  ): Promise<AxiosResponse | undefined> {
+  ): Promise<AxiosResponse> {
     try {
       const urlT = url.trim();
       validateHttpMethodParam(
@@ -63,6 +64,7 @@ export class HttpService implements IhttpService {
       if (err instanceof Error) {
         throw new HttpServiceError(err?.message, 500);
       }
+      throw new HttpServiceError('Unexpected Http dervice error', 500);
     }
   }
 
@@ -71,7 +73,7 @@ export class HttpService implements IhttpService {
   public async delete(
     url: string,
     config?: AxiosRequestConfig
-  ): Promise<AxiosResponse | undefined> {
+  ): Promise<AxiosResponse> {
     try {
       const urlT = url.trim();
 
@@ -88,6 +90,7 @@ export class HttpService implements IhttpService {
       if (err instanceof Error) {
         throw new HttpServiceError(err?.message, 500);
       }
+      throw new HttpServiceError('Unexpected Http dervice error', 500);
     }
   }
 }

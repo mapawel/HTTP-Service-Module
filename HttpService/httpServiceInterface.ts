@@ -6,14 +6,14 @@ export interface IhttpService {
   get: (
     url: string,
     config?: AxiosRequestConfig
-  ) => Promise<AxiosResponse | undefined>;
+  ) => Promise<AxiosResponse>;
   post: (
     url: string,
     data: DataType,
     config?: AxiosRequestConfig
-  ) => Promise<AxiosResponse | undefined>;
+  ) => Promise<AxiosResponse>;
   delete: (
     url: string,
     config?: AxiosRequestConfig
-  ) => Promise<AxiosResponse | undefined>;
+  ) => Promise<AxiosResponse>;
 }

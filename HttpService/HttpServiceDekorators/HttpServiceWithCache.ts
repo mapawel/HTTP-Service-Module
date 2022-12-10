@@ -30,13 +30,7 @@ export class HttpServiceWithCache extends HttpServiceDecorator {
       urlT,
       config
     );
-    if (freshResponce) {
-      cacheStore.addToCache(this.makeFullURL(urlT, config), freshResponce);
-      return freshResponce;
-    }
-    throw new CacheServiceError(
-      'Cannot obtain a fresh response for cache from http module',
-      500
-    );
+    cacheStore.addToCache(this.makeFullURL(urlT, config), freshResponce);
+    return freshResponce;
   }
 }
