@@ -1,4 +1,4 @@
-import { HttpServiceError } from '../HttpServiceError.js';
+import { HttpServiceError } from '../HttpService.exception.js';
 
 export const validateHttpMethodParam = (url: string) => {
   try {

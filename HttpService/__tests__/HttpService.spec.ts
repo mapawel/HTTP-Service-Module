@@ -2,7 +2,7 @@ import { AxiosResponse } from 'axios';
 import chai, { assert, expect } from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import nock from 'nock';
-import { HttpService } from '../HttpService';
+import { HttpService } from '../HttpService.class';
 
 chai.use(chaiAsPromised);
 
@@ -27,12 +27,9 @@ describe('Http Service:', () => {
   context('GET method:', () => {
     it('should response with status 200 and data', async () => {
       //Act
-      const res: AxiosResponse = await myHttpService.get(
-        '/testroute',
-        {
-          headers: { 'example-methodCall-header': 'example-value2' },
-        }
-      );
+      const res: AxiosResponse = await myHttpService.get('/testroute', {
+        headers: { 'example-methodCall-header': 'example-value2' },
+      });
 
       //Assert
       assert.equal(res.status, 200);
@@ -72,12 +69,9 @@ describe('Http Service:', () => {
   context('DELETE method:', () => {
     it('should response with status 202', async () => {
       //Act
-      const res: AxiosResponse = await myHttpService.delete(
-        '/testroute',
-        {
-          headers: { 'example-methodCall-header': 'example-value2' },
-        }
-      );
+      const res: AxiosResponse = await myHttpService.delete('/testroute', {
+        headers: { 'example-methodCall-header': 'example-value2' },
+      });
       //Assert
       assert.equal(res.status, 202);
     });

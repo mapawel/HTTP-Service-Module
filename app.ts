@@ -1,6 +1,6 @@
 import dotenv from 'dotenv';
-import { HttpService } from './HttpService/HttpService.js';
-import { HttpServiceWithCache } from './HttpService/HttpServiceDekorators/HttpServiceWithCache.js';
+import { HttpService } from './HttpService/HttpService.class.js';
+import { HttpServiceWithCache } from './HttpService/HttpServiceDekorators/HttpServiceWithCache.class.js';
 dotenv.config();
 
 if (process.env.EXAMPLE_BASEURL1) {

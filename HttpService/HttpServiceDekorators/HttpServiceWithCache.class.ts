@@ -1,10 +1,10 @@
 import path from 'path';
 import { AxiosRequestConfig, AxiosResponse } from 'axios';
-import { HttpServiceDecorator } from './HttpServiceDecorator.js';
-import { CacheStore } from '../../Cache/CacheStore.js';
-import { HttpService } from '../HttpService.js';
+import { HttpServiceDecorator } from './HttpServiceDecorator.class.js';
+import { CacheStore } from '../../Cache/CacheStore.class.js';
+import { HttpService } from '../HttpService.class.js';
 import { validateHttpMethodParam } from '../validators/validateHttpMethodParam.js';
-import { CacheServiceError } from '../../Cache/CacheServiceError.js';
+import { CacheServiceError } from '../../Cache/CacheService.exception.js';
 
 export class HttpServiceWithCache extends HttpServiceDecorator {
   private makeFullURL(urlT: string, config?: AxiosRequestConfig) {

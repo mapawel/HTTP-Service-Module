@@ -1,6 +1,6 @@
-import { HttpService } from '../HttpService.js';
-import { IhttpService } from '../httpServiceInterface';
-import type { DataType } from '../requestBodyDataType';
+import { HttpService } from '../HttpService.class.js';
+import { IhttpService } from '../HttpService.interface';
+import type { DataType } from '../requestBodyData.type';
 import { AxiosRequestConfig, AxiosResponse } from 'axios';
 
 export class HttpServiceDecorator implements IhttpService {

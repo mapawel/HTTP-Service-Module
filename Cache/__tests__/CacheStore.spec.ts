@@ -1,6 +1,6 @@
 import { AxiosResponse } from 'axios';
 import { assert } from 'chai';
-import { CacheStore } from '../CacheStore';
+import { CacheStore } from '../CacheStore.class';
 import { MockItem } from './MockItemType';
 
 //setup

@@ -2,8 +2,8 @@ import { AxiosResponse } from 'axios';
 import chai, { assert, expect } from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import nock from 'nock';
-import { HttpService } from '../../../HttpService/HttpService';
-import { HttpServiceWithCache } from '../../../HttpService/HttpServiceDekorators/HttpServiceWithCache';
+import { HttpService } from '../../HttpService.class';
+import { HttpServiceWithCache } from '../HttpServiceWithCache.class';
 
 chai.use(chaiAsPromised);
 

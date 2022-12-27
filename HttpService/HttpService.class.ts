@@ -1,8 +1,8 @@
 import path from 'path';
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
-import { IhttpService } from './httpServiceInterface';
-import type { DataType } from './requestBodyDataType';
-import { HttpServiceError } from './HttpServiceError.js';
+import { IhttpService } from './HttpService.interface';
+import type { DataType } from './requestBodyData.type';
+import { HttpServiceError } from './HttpService.exception.js';
 import { validateHttpMethodParam } from './validators/validateHttpMethodParam.js';
 
 export class HttpService implements IhttpService {

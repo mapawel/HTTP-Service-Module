@@ -1,4 +1,4 @@
-import { CacheServiceError } from '../CacheServiceError.js';
+import { CacheServiceError } from '../CacheService.exception.js';
 
 export const validateCacheInput = (key: string): void => {
   try {
