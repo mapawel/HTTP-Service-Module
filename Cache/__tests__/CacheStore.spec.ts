@@ -1,124 +1,103 @@
 import { AxiosResponse } from 'axios';
 import { assert } from 'chai';
 import { CacheStore } from '../CacheStore.class';
-import { MockItem } from './MockItemType';
+import { MockItem } from './MockItem.type';
+import { mockUrlAndResponsePairs } from './mockItems';
 
-//setup
-before(function () {
-  this.getOperationResponses = [];
-  this.deleteOperationResponse;
-  this.cacheStore = CacheStore.getInstance();
-  this.mockUrlAndResponsePairs = [
-    {
-      requestFullUrl: 'https://test.pl/a',
-      response: {
-        data: {
-          keyA: 'dataForKeyA',
-        },
-      },
-    },
-    {
-      requestFullUrl: 'https://test.pl/b',
-      response: {
-        data: {
-          keyB: 'dataForKeyB',
-        },
-      },
-    },
-  ];
-});
+describe('CacheStore tests suite:', () => {
+  let getOperationResponses: boolean[];
+  let cacheStore: CacheStore;
 
-describe('CacheStore:', function () {
-  it('should add HTTP response to Cache Store with use of addToCache() and should be able to return cache data using getCachedData()', function () {
-    // Act
-    this.mockUrlAndResponsePairs.forEach((mock: MockItem) =>
-      this.getOperationResponses.push(
-        this.cacheStore.addToCache(
-          mock.requestFullUrl,
-          mock.response as AxiosResponse
-        )
-      )
+  beforeEach(() => {
+    cacheStore = CacheStore.getInstance();
+    getOperationResponses = mockUrlAndResponsePairs.map((mock: MockItem) =>
+      cacheStore.addToCache(mock.requestFullUrl, mock.response as AxiosResponse)
     );
-    this.mockUrlAndResponsePairs.forEach((mock: MockItem, i: number) => {
-      const cachedResponse: false | AxiosResponse =
-        this.cacheStore.getCachedData(mock.requestFullUrl);
+  });
+
+  afterEach(() => {
+    CacheStore.resetInstance();
+  });
+
+  it('should add HTTP response to Cache Store with use of addToCache() and should be able to return cache data using getCachedData()', () => {
+    mockUrlAndResponsePairs.forEach((mock: MockItem, i: number) => {
+      const cachedResponse: false | AxiosResponse = cacheStore.getCachedData(
+        mock.requestFullUrl
+      );
       // Assert
       assert.deepEqual(
         cachedResponse,
-        this.mockUrlAndResponsePairs[i].response as AxiosResponse
+        mockUrlAndResponsePairs[i].response as AxiosResponse
       );
     });
   });
 
-  it('Module response should be "true" on success of addToCache()', function () {
-    this.getOperationResponses.forEach((resp: boolean) =>
-      assert.equal(resp, true)
-    );
+  it('Module response should be "true" on success of addToCache()', () => {
+    getOperationResponses.forEach((resp: boolean) => assert.equal(resp, true));
   });
 
-  it('Module response should be "false" on fail of addToCache() (trying to save the same key againg)', function () {
+  it('Module response should be "false" on fail of addToCache() (trying to save the same key againg)', () => {
     assert.equal(
-      this.cacheStore.addToCache(
-        this.mockUrlAndResponsePairs[0].requestFullUrl,
-        this.mockUrlAndResponsePairs[0].response as AxiosResponse
+      cacheStore.addToCache(
+        mockUrlAndResponsePairs[0].requestFullUrl,
+        mockUrlAndResponsePairs[0].response as AxiosResponse
       ),
       false
     );
   });
 
-  it('Module response should be "false" on fail of getCachedData() (after passing not existing key)', function () {
+  it('Module response should be "false" on fail of getCachedData() (after passing not existing key)', () => {
     assert.equal(
-      this.cacheStore.getCachedData(
-        this.mockUrlAndResponsePairs[0].requestFullUrl + 'notExisting'
+      cacheStore.getCachedData(
+        mockUrlAndResponsePairs[0].requestFullUrl + 'notExisting'
       ),
       false
     );
   });
 
-  it('should remove key-value pair from Cache Store with use of removeCachedData()', function () {
+  it('should remove key-value pair from Cache Store with use of removeCachedData() and return "true" on success', () => {
+    // Arrange
+    let deleteOperationResponse: boolean;
+    let cacheResponse: false | AxiosResponse;
+
     // Act
-    this.deleteOperationResponse = this.cacheStore.removeCachedData(
-      this.mockUrlAndResponsePairs[0].requestFullUrl
+    deleteOperationResponse = cacheStore.removeCachedData(
+      mockUrlAndResponsePairs[0].requestFullUrl
     );
+
     //assert
-    const cacheResponse: false | AxiosResponse = this.cacheStore.getCachedData(
-      this.mockUrlAndResponsePairs[0].requestFullUrl
+    cacheResponse = cacheStore.getCachedData(
+      mockUrlAndResponsePairs[0].requestFullUrl
     );
-    assert.equal(this.deleteOperationResponse, true);
+    assert.equal(deleteOperationResponse, true);
     assert.equal(cacheResponse, false);
   });
 
-  it('should return "true" on success of removeCachedData()', function () {
-    //assert
-    assert.equal(this.deleteOperationResponse, true);
-  });
-
-  it('should return "false" on fail of removeCachedData()', function () {
+  it('should return "false" on fail of removeCachedData()', () => {
     //assert
     assert.equal(
-      this.cacheStore.removeCachedData(
-        this.mockUrlAndResponsePairs[0].requestFullUrl
+      cacheStore.removeCachedData(
+        mockUrlAndResponsePairs[0].requestFullUrl + 'nonExistingUrl'
       ),
       false
     );
   });
 
-  it('should throw Error from getCachedData mathod when not url key passed', function () {
+  it('should throw Error from getCachedData mathod when not url key passed', () => {
     // Act+assert
-    assert.throws(() => this.cacheStore.getCachedData(''), 'Invalid URL');
+    assert.throws(() => cacheStore.getCachedData(''), 'Invalid URL');
   });
 
-  it('should throw Error from addToCache mathod when not url key passed', function () {
+  it('should throw Error from addToCache mathod when not url key passed', () => {
     // Act+assert
-
     assert.throws(
-      () => this.cacheStore.addToCache('', {} as AxiosResponse),
+      () => cacheStore.addToCache('', {} as AxiosResponse),
       'Invalid URL'
     );
   });
 
-  it('should throw Error from removeCachedData mathod when not url key passed', function () {
+  it('should throw Error from removeCachedData mathod when not url key passed', () => {
     // Act+assert
-    assert.throws(() => this.cacheStore.removeCachedData(''), 'Invalid URL');
+    assert.throws(() => cacheStore.removeCachedData(''), 'Invalid URL');
   });
 });
