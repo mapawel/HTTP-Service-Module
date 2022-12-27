@@ -7,7 +7,7 @@ import { validateHttpMethodParam } from './validators/validateHttpMethodParam.js
 
 export class HttpService implements IhttpService {
   private static axios: AxiosInstance;
-  private static instance: HttpService;
+  private static instance: HttpService | null;
 
   private constructor(configuration: AxiosRequestConfig) {
     HttpService.axios = axios.create(configuration);
@@ -16,6 +16,10 @@ export class HttpService implements IhttpService {
   public static getInstance(config: AxiosRequestConfig) {
     if (HttpService.instance) return HttpService.instance;
     return (HttpService.instance = new HttpService(config));
+  }
+
+  public static resetInstance() {
+    HttpService.instance = null
   }
 
   public static getAxiosDefaults() {

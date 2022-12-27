@@ -5,23 +5,30 @@ import nock from 'nock';
 import { HttpService } from '../HttpService.class';
 
 chai.use(chaiAsPromised);
+let nockServerWhBasePath: nock.Scope;
+let myHttpService: HttpService;
 
-describe('Http Service:', () => {
-  //arrange
-  const nockServerWhBasePath: nock.Scope = nock('http://basepath.com');
-  nockServerWhBasePath.get('/testroute').times(2).reply(200, {
-    bodyKey: 'exampleDataInBody',
+describe('Http Service tests suite:', () => {
+  beforeEach(() => {
+    nockServerWhBasePath = nock('http://basepath.com');
+    nockServerWhBasePath.get('/testroute').reply(200, {
+      bodyKey: 'exampleDataInBody',
+    });
+    nockServerWhBasePath.post('/testroute').reply(201);
+    nockServerWhBasePath.delete('/testroute').reply(202);
+
+    myHttpService = HttpService.getInstance({
+      baseURL: 'http://basepath.com',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: 'example-token',
+        'Other-example-header': 'example-value1',
+      },
+    });
   });
-  nockServerWhBasePath.post('/testroute').times(2).reply(201);
-  nockServerWhBasePath.delete('/testroute').reply(202);
 
-  const myHttpService: HttpService = HttpService.getInstance({
-    baseURL: 'http://basepath.com',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: 'example-token',
-      'Other-example-header': 'example-value1',
-    },
+  afterEach(() => {
+    HttpService.resetInstance();
   });
 
   context('GET method:', () => {
@@ -36,7 +43,7 @@ describe('Http Service:', () => {
       assert.deepEqual(res.data, { bodyKey: 'exampleDataInBody' });
     });
 
-    it('should return Http Service Error', async () => {
+    it('should return Http Service Error while passing not valid url as baseURL key', async () => {
       //Act+Assert
       await expect(
         myHttpService.get('/testroute', { baseURL: 'wrongURL' })
@@ -58,7 +65,7 @@ describe('Http Service:', () => {
       assert.equal(res.status, 201);
     });
 
-    it('should return Http Service Error', async () => {
+    it('should return Http Service Error while passing not valid url as baseURL key', async () => {
       //Act+assert
       await expect(
         myHttpService.post('/testroute', {}, { baseURL: 'wrongURL' })
@@ -75,7 +82,7 @@ describe('Http Service:', () => {
       //Assert
       assert.equal(res.status, 202);
     });
-    it('should return Http Service Error', async () => {
+    it('should return Http Service Error while passing not valid url as baseURL key', async () => {
       //Act+assert
       await expect(
         myHttpService.delete('/testroute', { baseURL: 'wrongURL' })
