@@ -7,24 +7,31 @@ import { HttpServiceWithCache } from '../HttpServiceWithCache.class';
 
 chai.use(chaiAsPromised);
 
-describe('Http Service with Cache:', () => {
-  // arrange
-  const nockServerWhBasePath: nock.Scope = nock('http://basepath.com');
-  nockServerWhBasePath.get('/testrouteCache').times(1).reply(200, {
-    bodyKey: 'exampleDataInBody',
+describe('Http Service with Cache tests suite:', () => {
+  let nockServerWhBasePath: nock.Scope;
+  let myHttpService: HttpService;
+  let myDecoratedHttpService: HttpServiceWithCache;
+
+  beforeEach(() => {
+    nockServerWhBasePath = nock('http://basepath.com');
+    nockServerWhBasePath.get('/testrouteCache').times(1).reply(200, {
+      bodyKey: 'exampleDataInBody',
+    });
+
+    myHttpService = HttpService.getInstance({
+      baseURL: 'http://basepath.com',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: 'example-token',
+        'Other-example-header': 'example-value1',
+      },
+    });
+    myDecoratedHttpService = new HttpServiceWithCache(myHttpService);
   });
 
-  const myHttpService: HttpService = HttpService.getInstance({
-    baseURL: 'http://basepath.com',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: 'example-token',
-      'Other-example-header': 'example-value1',
-    },
-  });
-  const myDecoratedHttpService: HttpServiceWithCache = new HttpServiceWithCache(
-    myHttpService
-  );
+  afterEach(()=>{
+    HttpService.resetInstance()
+  })
 
   //Act
   context('GET method (cached response):', () => {
